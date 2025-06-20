@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>macOS Browser Desktop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sf: [
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "SF Pro Display",
+                "system-ui",
+                "sans-serif",
+              ],
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="h-full overflow-hidden bg-gray-900 font-sf select-none">
+    <div
+      id="desktop"
+      class="relative h-full w-full bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 bg-cover bg-center"
+      style="
+        background-image: url(&quot;https://images.unsplash.com/photo-1557682250-33bd709cbe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=2029&q=80&quot;);
+      "
+    >
+      <div
+        class="absolute top-0 left-0 w-full h-7 bg-black/30 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-4 text-white text-sm z-50"
+      >
+        <div class="flex items-center space-x-4">
+          <div class="font-semibold text-white">🍎</div>
+          <span
+            class="hover:bg-white/10 px-2 py-1 rounded cursor-pointer transition-colors"
+            >Finder</span
+          >
+          <span
+            class="hover:bg-white/10 px-2 py-1 rounded cursor-pointer transition-colors"
+            >File</span
+          >
+          <span
+            class="hover:bg-white/10 px-2 py-1 rounded cursor-pointer transition-colors"
+            >Edit</span
+          >
+          <span
+            class="hover:bg-white/10 px-2 py-1 rounded cursor-pointer transition-colors"
+            >View</span
+          >
+          <span
+            class="hover:bg-white/10 px-2 py-1 rounded cursor-pointer transition-colors"
+            >Go</span
+          >
+          <span
+            class="hover:bg-white/10 px-2 py-1 rounded cursor-pointer transition-colors"
+            >Window</span
+          >
+          <span
+            class="hover:bg-white/10 px-2 py-1 rounded cursor-pointer transition-colors"
+            >Help</span
+          >
+        </div>
+        <div class="flex items-center space-x-4">
+          <button
+            id="theme-toggle"
+            class="hover:bg-white/10 px-2 py-1 rounded transition-colors"
+          >
+            🌙
+          </button>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs">📶</span>
+            <span class="text-xs">🔋</span>
+            <div id="clock" class="text-xs font-medium"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="windows-container" class="absolute inset-0 pt-7">
+        <div
+          class="window absolute top-20 left-20 w-[600px] h-[400px] bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-lg shadow-2xl border border-white/20 z-10 hidden"
+          id="finder-window"
+          data-window="finder"
+        >
+          <div
+            class="window-header bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm flex items-center justify-between px-4 py-2 rounded-t-lg cursor-pointer border-b border-gray-200/50 dark:border-gray-600/50"
+          >
+            <div class="flex space-x-2">
+              <button
+                class="w-3 h-3 bg-red-500 hover:bg-red-600 rounded-full transition-colors"
+                data-action="close"
+              ></button>
+              <button
+                class="w-3 h-3 bg-yellow-500 hover:bg-yellow-600 rounded-full transition-colors"
+                data-action="minimize"
+              ></button>
+              <button
+                class="w-3 h-3 bg-green-500 hover:bg-green-600 rounded-full transition-colors"
+                data-action="maximize"
+              ></button>
+            </div>
+            <div class="text-sm font-medium text-gray-700">Finder</div>
+            <div class="w-16"></div>
+          </div>
+          <div class="window-content flex h-full">
+            <div
+              class="w-48 bg-gray-50/80 dark:bg-gray-900/80 border-r border-gray-200/50 dark:border-gray-700/50 p-4"
+            >
+              <div class="space-y-2 text-sm">
+                <div
+                  class="flex items-center space-x-2 p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded cursor-pointer text-white"
+                >
+                  <span>📁</span>
+                  <span>Desktop</span>
+                </div>
+                <div
+                  class="flex items-center space-x-2 p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded cursor-pointer text-white"
+                >
+                  <span>📄</span>
+                  <span>Documents</span>
+                </div>
+                <div
+                  class="flex items-center space-x-2 p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded cursor-pointer text-white"
+                >
+                  <span>⬇️</span>
+                  <span>Downloads</span>
+                </div>
+                <div
+                  class="flex items-center space-x-2 p-2 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded cursor-pointer text-white"
+                >
+                  <span>🖼️</span>
+                  <span>Pictures</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex-1 p-4">
+              <div class="grid grid-cols-4 gap-4">
+                <div
+                  class="flex flex-col items-center p-3 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 rounded cursor-pointer"
+                >
+                  <div class="text-3xl mb-2">📁</div>
+                  <div class="text-xs text-center text-white">
+                    Sample Folder
+                  </div>
+                </div>
+                <div
+                  class="flex flex-col items-center p-3 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 rounded cursor-pointer"
+                >
+                  <div class="text-3xl mb-2">📄</div>
+                  <div class="text-xs text-center text-white">Document.txt</div>
+                </div>
+                <div
+                  class="flex flex-col items-center p-3 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 rounded cursor-pointer"
+                >
+                  <div class="text-3xl mb-2">🖼️</div>
+                  <div class="text-xs text-center text-white">Image.jpg</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="window absolute top-24 left-24 w-[500px] h-[350px] bg-yellow-50/95 dark:bg-yellow-900/95 backdrop-blur-md rounded-lg shadow-2xl border border-white/20 z-10 hidden"
+          id="notes-window"
+          data-window="notes"
+        >
+          <div
+            class="window-header bg-yellow-100/80 dark:bg-yellow-800/80 backdrop-blur-sm flex items-center justify-between px-4 py-2 rounded-t-lg cursor-pointer border-b border-yellow-200/50 dark:border-yellow-700/50"
+          >
+            <div class="flex space-x-2">
+              <button
+                class="w-3 h-3 bg-red-500 hover:bg-red-600 rounded-full transition-colors"
+                data-action="close"
+              ></button>
+              <button
+                class="w-3 h-3 bg-yellow-500 hover:bg-yellow-600 rounded-full transition-colors"
+                data-action="minimize"
+              ></button>
+              <button
+                class="w-3 h-3 bg-green-500 hover:bg-green-600 rounded-full transition-colors"
+                data-action="maximize"
+              ></button>
+            </div>
+            <div class="text-sm font-medium text-gray-700">Notes</div>
+            <div class="w-16"></div>
+          </div>
+          <div class="window-content p-4 h-full">
+            <textarea
+              class="w-full h-full bg-transparent border-none outline-none resize-none text-gray-800 dark:text-gray-200 placeholder-gray-500"
+              placeholder="Start typing your notes here..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div
+          class="window absolute top-28 left-28 w-[600px] h-[400px] bg-black/95 backdrop-blur-md rounded-lg shadow-2xl border border-white/20 z-10 hidden"
+          id="terminal-window"
+          data-window="terminal"
+        >
+          <div
+            class="window-header bg-gray-800/80 backdrop-blur-sm flex items-center justify-between px-4 py-2 rounded-t-lg cursor-pointer border-b border-gray-700/50"
+          >
+            <div class="flex space-x-2">
+              <button
+                class="w-3 h-3 bg-red-500 hover:bg-red-600 rounded-full transition-colors"
+                data-action="close"
+              ></button>
+              <button
+                class="w-3 h-3 bg-yellow-500 hover:bg-yellow-600 rounded-full transition-colors"
+                data-action="minimize"
+              ></button>
+              <button
+                class="w-3 h-3 bg-green-500 hover:bg-green-600 rounded-full transition-colors"
+                data-action="maximize"
+              ></button>
+            </div>
+            <div class="text-sm font-medium text-white">Terminal</div>
+            <div class="w-16"></div>
+          </div>
+          <div
+            class="window-content p-4 h-full font-mono text-sm text-green-400"
+          >
+            <div class="mb-2">Last login: Thu Jun 20 14:32:15 on ttys000</div>
+            <div class="mb-2">
+              user@macbook ~ % <span class="animate-pulse">|</span>
+            </div>
+            <div class="text-gray-500">Welcome to macOS Terminal</div>
+            <div class="text-gray-500">Type 'help' for available commands</div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="dock absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 bg-white/20 dark:bg-black/30 backdrop-blur-md px-4 py-3 rounded-2xl shadow-2xl border border-white/20 z-50"
+      >
+        <div
+          class="dock-app w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-white text-xl font-bold cursor-pointer hover:scale-110 transform transition-all duration-200 shadow-lg"
+          data-app="finder"
+          title="Finder"
+        >
+          📁
+        </div>
+        <div
+          class="dock-app w-14 h-14 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-xl flex items-center justify-center text-white text-xl font-bold cursor-pointer hover:scale-110 transform transition-all duration-200 shadow-lg"
+          data-app="notes"
+          title="Notes"
+        >
+          📝
+        </div>
+        <div
+          class="dock-app w-14 h-14 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl flex items-center justify-center text-white text-xl font-bold cursor-pointer hover:scale-110 transform transition-all duration-200 shadow-lg"
+          data-app="terminal"
+          title="Terminal"
+        >
+          💻
+        </div>
+      </div>
+
+      <div
+        id="context-menu"
+        class="fixed hidden bg-white/95 text-white backdrop-blur-md rounded-lg shadow-2xl border border-white/20 py-2 z-50 min-w-48"
+      >
+        <div
+          class="context-menu-item px-4 py-2 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 cursor-pointer text-sm text-gray-700 transition-colors"
+        >
+          Create Folder
+        </div>
+        <div
+          class="context-menu-item px-4 py-2 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 cursor-pointer text-sm text-gray-700 transition-colors"
+        >
+          Change Wallpaper
+        </div>
+        <hr class="my-1 border-gray-200/50 dark:border-gray-700/50" />
+        <div
+          class="context-menu-item px-4 py-2 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 cursor-pointer text-sm text-gray-700 transition-colors"
+        >
+          Get Info
+        </div>
+        <div
+          class="context-menu-item px-4 py-2 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 cursor-pointer text-sm text-gray-700 transition-colors"
+        >
+          Refresh Desktop
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
