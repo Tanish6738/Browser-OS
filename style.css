@@ -281,3 +281,92 @@ html {
   border-radius: 4px;
   padding: 2px 6px;
 }
+
+/* Media Player Styles */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="range"]::-webkit-slider-track {
+  background: rgba(255, 255, 255, 0.2);
+  height: 4px;
+  border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+input[type="range"]::-moz-range-track {
+  background: rgba(255, 255, 255, 0.2);
+  height: 4px;
+  border-radius: 2px;
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Media Player Button Styles */
+#play-pause-btn, #video-play-pause {
+  transition: all 0.2s ease;
+}
+
+#play-pause-btn:hover, #video-play-pause:hover {
+  transform: scale(1.1);
+}
+
+/* Video Player Specific Styles */
+#video-player {
+  background: #000;
+  border-radius: 8px;
+}
+
+#video-player::-webkit-media-controls {
+  display: none !important;
+}
+
+#video-player::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+/* Custom Progress Bar for Music Player */
+#progress-bar {
+  background: linear-gradient(to right, #8b5cf6 0%, rgba(139, 92, 246, 0.3) 0%);
+}
+
+#progress-bar::-webkit-slider-thumb {
+  background: #8b5cf6;
+}
+
+#progress-bar::-moz-range-thumb {
+  background: #8b5cf6;
+}
+
+/* Volume Controls */
+#volume-bar, #video-volume {
+  background: linear-gradient(to right, #ffffff 0%, rgba(255, 255, 255, 0.3) 0%);
+}
+
+#volume-bar::-webkit-slider-thumb, #video-volume::-webkit-slider-thumb {
+  background: #ffffff;
+}
+
+#volume-bar::-moz-range-thumb, #video-volume::-moz-range-thumb {
+  background: #ffffff;
+}

@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeContextMenu();
     initializeThemeToggle();
     initializeKeyboardShortcuts();
+    initializeMediaPlayers(); // Add this line
+    addMediaContextMenuItems(); // Add this line
 });
 
 function initializeClock() {
@@ -1345,4 +1347,230 @@ function deleteFile(fileId) {
     });
     
     showNotification('File deleted');
+}
+
+// Media Player functionality
+let currentVideoIndex = 0;
+let isPlaying = false;
+let isVideoPlaying = false;
+
+// Hardcoded video files - you can modify these paths
+const videoFiles = [
+    { title: "Video 1", src: "Videos/1.mp4" },
+    { title: "Video 2", src: "Videos/2.mp4" },
+    { title: "Video 3", src: "Videos/3.mp4" }
+];
+
+function initializeMediaPlayers() {
+    initializeAudioPlayer();
+    initializeVideoPlayer();
+}
+
+function initializeAudioPlayer() {
+    const audioPlayer = document.getElementById('audio-player');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const volumeBar = document.getElementById('volume-bar');
+    const currentTimeSpan = document.getElementById('current-time');
+    const totalTimeSpan = document.getElementById('total-time');
+    const trackTitle = document.getElementById('current-track-title');
+    const trackArtist = document.getElementById('current-track-artist');
+
+    if (!audioPlayer) return;
+
+    // Set track info for the hardcoded audio
+    trackTitle.textContent = "Bhigi Bhigi";
+    trackArtist.textContent = "Unknown Artist";
+
+    // Play/Pause functionality
+    playPauseBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            audioPlayer.pause();
+            playPauseBtn.textContent = '▶️';
+            isPlaying = false;
+        } else {
+            audioPlayer.play();
+            playPauseBtn.textContent = '⏸️';
+            isPlaying = true;
+        }
+    });
+
+    // Previous/Next track buttons (disabled for single track)
+    prevBtn.addEventListener('click', () => {
+        audioPlayer.currentTime = 0; // Restart the track
+        showNotification('Restarting track');
+    });
+
+    nextBtn.addEventListener('click', () => {
+        audioPlayer.currentTime = 0; // Restart the track
+        showNotification('Restarting track');
+    });
+
+    // Progress bar
+    progressBar.addEventListener('input', () => {
+        const seekTime = (progressBar.value / 100) * audioPlayer.duration;
+        if (!isNaN(seekTime)) {
+            audioPlayer.currentTime = seekTime;
+        }
+    });
+
+    // Volume control
+    volumeBar.addEventListener('input', () => {
+        audioPlayer.volume = volumeBar.value / 100;
+    });
+
+    // Update progress and time
+    audioPlayer.addEventListener('timeupdate', () => {
+        if (audioPlayer.duration) {
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressBar.value = progress;
+            
+            // Update progress bar visual
+            progressBar.style.background = `linear-gradient(to right, #8b5cf6 ${progress}%, rgba(139, 92, 246, 0.3) ${progress}%)`;
+            
+            currentTimeSpan.textContent = formatTime(audioPlayer.currentTime);
+        }
+    });
+
+    // Set total time when metadata loads
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        totalTimeSpan.textContent = formatTime(audioPlayer.duration);
+    });
+
+    // Handle track ending
+    audioPlayer.addEventListener('ended', () => {
+        playPauseBtn.textContent = '▶️';
+        isPlaying = false;
+        showNotification('Track finished');
+    });
+
+    // Handle audio loading errors
+    audioPlayer.addEventListener('error', () => {
+        showNotification('Error loading audio file');
+    });
+
+    // Set initial volume
+    audioPlayer.volume = 0.5;
+}
+
+function initializeVideoPlayer() {
+    const videoPlayer = document.getElementById('video-player');
+    const videoPlayPause = document.getElementById('video-play-pause');
+    const videoVolume = document.getElementById('video-volume');
+    const videoCurrent = document.getElementById('video-current-time');
+    const videoTotal = document.getElementById('video-total-time');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+    if (!videoPlayer) return;
+
+    // Load first video
+    loadVideoFile(0);
+
+    // Play/Pause functionality
+    videoPlayPause.addEventListener('click', () => {
+        if (isVideoPlaying) {
+            videoPlayer.pause();
+            videoPlayPause.textContent = '▶️';
+            isVideoPlaying = false;
+        } else {
+            videoPlayer.play();
+            videoPlayPause.textContent = '⏸️';
+            isVideoPlaying = true;
+        }
+    });
+
+    // Volume control
+    videoVolume.addEventListener('input', () => {
+        videoPlayer.volume = videoVolume.value / 100;
+        const progress = videoVolume.value;
+        videoVolume.style.background = `linear-gradient(to right, #ffffff ${progress}%, rgba(255, 255, 255, 0.3) ${progress}%)`;
+    });
+
+    // Fullscreen functionality
+    fullscreenBtn.addEventListener('click', () => {
+        if (videoPlayer.requestFullscreen) {
+            videoPlayer.requestFullscreen();
+        } else if (videoPlayer.webkitRequestFullscreen) {
+            videoPlayer.webkitRequestFullscreen();
+        } else if (videoPlayer.msRequestFullscreen) {
+            videoPlayer.msRequestFullscreen();
+        }
+    });
+
+    // Update time display
+    videoPlayer.addEventListener('timeupdate', () => {
+        if (videoPlayer.duration) {
+            videoCurrent.textContent = formatTime(videoPlayer.currentTime);
+        }
+    });
+
+    // Set total time when metadata loads
+    videoPlayer.addEventListener('loadedmetadata', () => {
+        videoTotal.textContent = formatTime(videoPlayer.duration);
+    });
+
+    // Handle video loading errors
+    videoPlayer.addEventListener('error', () => {
+        showNotification(`Error loading video: ${videoFiles[currentVideoIndex].title}`);
+    });
+
+    // Set initial volume
+    videoPlayer.volume = 0.5;
+    videoVolume.value = 50;
+    videoVolume.style.background = `linear-gradient(to right, #ffffff 50%, rgba(255, 255, 255, 0.3) 50%)`;
+
+    // Handle video clicks for play/pause
+    videoPlayer.addEventListener('click', () => {
+        videoPlayPause.click();
+    });
+}
+
+function loadVideoFile(index) {
+    const videoPlayer = document.getElementById('video-player');
+    
+    if (index >= 0 && index < videoFiles.length) {
+        const video = videoFiles[index];
+        videoPlayer.src = video.src;
+        currentVideoIndex = index;
+        
+        showNotification(`Loaded video: ${video.title}`);
+    }
+}
+
+function formatTime(seconds) {
+    if (isNaN(seconds)) return '0:00';
+    
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+// Add media player context menu items
+function addMediaContextMenuItems() {
+    const contextMenu = document.getElementById('context-menu');
+    
+    // Add audio file option
+    const audioItem = document.createElement('div');
+    audioItem.className = 'context-menu-item px-4 py-2 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 cursor-pointer text-sm text-gray-700 transition-colors';
+    audioItem.textContent = 'Open Music Player';
+    audioItem.addEventListener('click', () => {
+        openWindow('music-window');
+        contextMenu.classList.add('hidden');
+    });
+    
+    // Add video file option
+    const videoItem = document.createElement('div');
+    videoItem.className = 'context-menu-item px-4 py-2 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 cursor-pointer text-sm text-gray-700 transition-colors';
+    videoItem.textContent = 'Open Video Player';
+    videoItem.addEventListener('click', () => {
+        openWindow('video-window');
+        contextMenu.classList.add('hidden');
+    });
+    
+    // Insert before the separator
+    const separator = contextMenu.querySelector('hr');
+    contextMenu.insertBefore(videoItem, separator);
+    contextMenu.insertBefore(audioItem, videoItem);
 }
